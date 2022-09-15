@@ -7,6 +7,7 @@ import 'antd/dist/antd.min.css'
 import axios from "axios";
 import moment from "moment";
 import * as XLSX from 'xlsx';
+
 interface DataType {
   key: string;
   name: string;
@@ -18,11 +19,9 @@ type DataIndex = keyof DataType;
 
 
 const App: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef<InputRef>(null);
-  const [whitelists, setWhitelists] = useState([])
-
+  const [whitelists, setWhitelists] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   useEffect(() => {
     axios.get('https://slimeroyale.com/api/v1/user/whitelist')
       .then(async function (response) {
@@ -73,28 +72,63 @@ const App: React.FC = () => {
   ];
 
 
-  const handleExport = () =>{
+  const handleExport = () => {
     console.log(whitelists);
-    const wb =XLSX.utils.book_new();
+    const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(whitelists);
-    XLSX.utils.book_append_sheet(wb,ws,"MySheet");
-    XLSX.writeFile(wb,"whitelist.xlsx")
+    ws["!cols"] = [{wch: 30}, {wch: 10}, {wch: 10}, {wch: 30}, {wch: 50}, {wch: 30}, {wch: 30}];
+    XLSX.utils.book_append_sheet(wb, ws, "MySheet");
+    XLSX.writeFile(wb, "whitelist.xlsx", {bookType: 'xlsx', type: 'buffer'})
   }
 
+  const account: any = {
+    username: "slimeroyale@2022",
+    password: "0x616Ba1b07f2001"
+  }
+
+  const user: any = JSON.parse(localStorage.getItem('user') as any);
+  console.log("user", user);
+
+
+  useEffect(() => {
+    if (!user) {
+      const username:any = prompt("Enter username");
+      setUsername(username)
+      const password:any = prompt("Enter password");
+      setPassword(password)
+      console.log("username", username);
+      console.log("pass", password);
+
+      if (username && password) {
+        if (username == account.username && password == account.password) {
+          localStorage.setItem("user", JSON.stringify(account));
+          window.location.reload()
+        } else {
+          window.location.reload()
+        }
+      }
+    }
+  }, [user, username, password])
+
   return (
-    <div
-      className={"container d-flex align-items-center"}
-      style={{
-        minHeight: "100vh",
-      }}
-    >
-      <div className={"w-100"}>
-        <h2 className={"text-center"}>Whitelist registration list : {whitelists.length} address</h2>
-        <div>
-          <button onClick={handleExport} className="btn btn-success mb-3">Export User Data</button>
+    <div className={"app"}>
+      {user && user.username == "slimeroyale@2022" && user.password == "0x616Ba1b07f2001" &&
+        <div
+          className={"container d-flex align-items-center"}
+          style={{
+            minHeight: "100vh",
+          }}
+        >
+          <div className={"w-100"}>
+            <h2 className={"text-center"}>Whitelist registration list : {whitelists.length} address</h2>
+            <div className={"d-flex justify-content-end"}>
+              <button onClick={handleExport} className="btn btn-success mb-3">Export User Data</button>
+            </div>
+            <Table className={"w-100 mt-3"} columns={columns} dataSource={whitelists}/>
+          </div>
         </div>
-        <Table className={"w-100 mt-3"} columns={columns} dataSource={whitelists}/>
-      </div>
+
+      }
     </div>
   );
 };
