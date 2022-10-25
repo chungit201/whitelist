@@ -54,6 +54,16 @@ const App: React.FC = () => {
       width: '20%',
     },
     {
+      title: 'Reward',
+      render: (record) => {
+        return (
+          <div>{(record?.reward)} SCE</div>
+        )
+      },
+      key: 'type',
+      width: '20%',
+    },
+    {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
@@ -89,7 +99,6 @@ const App: React.FC = () => {
   const user: any = JSON.parse(localStorage.getItem('user') as any);
   console.log("user", user);
 
-
   useEffect(() => {
     if (!user) {
       const username:any = prompt("Enter username");
@@ -119,7 +128,7 @@ const App: React.FC = () => {
           }}
         >
           <div className={"w-100"}>
-            <h2 className={"text-center"}>Whitelist registration list : {whitelists.length} address</h2>
+            <h2 className={"text-center"}>LIST OF WINNER : {whitelists.length} ADDRESS</h2>
             <div className={"d-flex justify-content-end"}>
               <button onClick={handleExport} className="btn btn-success mb-3">Export User Data</button>
             </div>
