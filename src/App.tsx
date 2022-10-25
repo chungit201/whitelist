@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   useEffect(() => {
-    axios.get('https://slimeroyale.com/api/v1/user/whitelist')
+    axios.get('https://slimeroyale.com/api/user-ticket?page=0&limit=10000')
       .then(async function (response) {
         console.log(response);
         const data = await response.data.results
@@ -39,17 +39,17 @@ const App: React.FC = () => {
 
   }, [])
 
-
+  console.log(whitelists)
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: 'Event',
+      dataIndex: 'event',
       key: 'email',
       width: '30%',
     },
     {
-      title: 'Type',
-      dataIndex: 'type',
+      title: 'Number',
+      dataIndex: 'number',
       key: 'type',
       width: '20%',
     },
@@ -112,7 +112,6 @@ const App: React.FC = () => {
 
   return (
     <div className={"app"}>
-      {user && user.username == "slimeroyale@2022" && user.password == "0x616Ba1b07f2001" &&
         <div
           className={"container d-flex align-items-center"}
           style={{
@@ -128,7 +127,6 @@ const App: React.FC = () => {
           </div>
         </div>
 
-      }
     </div>
   );
 };
