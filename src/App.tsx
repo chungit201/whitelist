@@ -1,5 +1,4 @@
-import {SearchOutlined} from '@ant-design/icons';
-import type {InputRef} from 'antd';
+
 import {Button, Input, Space, Table} from 'antd';
 import type {ColumnsType, ColumnType} from 'antd/es/table';
 import React, {useEffect, useRef, useState} from 'react';
@@ -26,8 +25,14 @@ const App: React.FC = () => {
     axios.get('https://slimeroyale.com/api/user-ticket?page=0&limit=10000')
       .then(async function (response) {
         console.log(response);
-        const data = await response.data.results
-        setWhitelists(data)
+        const data = await response.data.results;
+        let convert = data && data.map((o:any, i:any) => {
+          return {
+            ...o,
+            eventName: o.event.name
+          };
+        });
+        setWhitelists(convert)
       })
       .catch(function (error) {
         // handle error
@@ -43,15 +48,10 @@ const App: React.FC = () => {
   const columns: ColumnsType<DataType> = [
     {
       title: 'Event',
-      dataIndex: 'event',
-      key: 'email',
+      dataIndex: 'eventName',
+      key: 'eventName',
       width: '30%',
-      render: (record) => {
-        console.log(record)
-        return (
-          <div>{record?.name}</div>
-        )
-      },
+
     },
     {
       title: 'Number',
