@@ -46,6 +46,12 @@ const App: React.FC = () => {
       dataIndex: 'event',
       key: 'email',
       width: '30%',
+      render: (record) => {
+        console.log(record)
+        return (
+          <div>{record?.name}</div>
+        )
+      },
     },
     {
       title: 'Number',
@@ -62,6 +68,12 @@ const App: React.FC = () => {
       },
       key: 'type',
       width: '20%',
+    },
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Address',
