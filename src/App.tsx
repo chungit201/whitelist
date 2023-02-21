@@ -62,8 +62,9 @@ const App: React.FC = () => {
     {
       title: 'Reward',
       render: (record) => {
+        console.log("record",record )
         return (
-          <div>{(record?.reward)} SCE</div>
+          <div>{(record?.reward.description)}</div>
         )
       },
       key: 'type',
